@@ -43,6 +43,8 @@ public class ShutDownDemo extends JFrame implements Runnable {
 
 	boolean isStop = false; // 线程结束标志
 	static int totalTime = 0; // 总时间
+	
+	// 时分秒输入框
 	private JTextField textField = new JTextField();
 	private JTextField textField_1 = new JTextField();
 	private JTextField textField_2 = new JTextField();
@@ -120,16 +122,18 @@ public class ShutDownDemo extends JFrame implements Runnable {
 		this.setSize(308, 201);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
+		
+		// 注册关闭窗口的监听事件
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				int isclose = JOptionPane.showConfirmDialog(null, "关闭窗口前要取消关机计划吗？", "温馨提示", JOptionPane.YES_NO_OPTION);
 				if (isclose == 0)
 					cancelShutdown();
-				// System.exit(0);
 			}
 		});
 	}
 
+	// 线程完成计时器效果
 	@Override
 	public void run() {
 		while (!isStop) {
@@ -240,7 +244,6 @@ public class ShutDownDemo extends JFrame implements Runnable {
 	// 检查入参中是否有非数字
 	public static boolean isNumeric(String str) {
 		for (int i = 0; i < str.length(); i++) {
-			// System.out.println(str.charAt(i)); //用于调试
 			if (!Character.isDigit(str.charAt(i))) {
 				return false;
 			}
