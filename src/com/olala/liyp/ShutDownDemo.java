@@ -33,7 +33,7 @@ import org.apache.commons.lang3.StringUtils;
  * 
  * @author liyp (mailto:liyp@primeton.com)
  */
-public class ShutDownDemo extends JFrame implements Runnable {
+public class ShutDownDemo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,11 +43,12 @@ public class ShutDownDemo extends JFrame implements Runnable {
 
 	boolean isStop = false; // 线程结束标志
 	static int totalTime = 0; // 总时间
-	
+
 	// 时分秒输入框
 	private JTextField textField = new JTextField();
 	private JTextField textField_1 = new JTextField();
 	private JTextField textField_2 = new JTextField();
+	JButton jbt1 = new JButton("确定");
 
 	// 构造函数
 	public ShutDownDemo() {
@@ -85,7 +86,6 @@ public class ShutDownDemo extends JFrame implements Runnable {
 		getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 
-		final JButton jbt1 = new JButton("确定");
 		jbt1.setBounds(29, 0, 95, 59);
 		panel_1.add(jbt1);
 
@@ -117,36 +117,41 @@ public class ShutDownDemo extends JFrame implements Runnable {
 		});
 
 		// 主窗口参数设置
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setVisible(true);
 		this.setSize(308, 201);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		
+
 		// 注册关闭窗口的监听事件
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				int isclose = JOptionPane.showConfirmDialog(null, "关闭窗口前要取消关机计划吗？", "温馨提示", JOptionPane.YES_NO_OPTION);
+				int isclose = JOptionPane.showConfirmDialog(null, "关闭窗口前要取消关机计划吗？", "温馨提示",
+						JOptionPane.YES_NO_CANCEL_OPTION);
 				if (isclose == 0)
 					cancelShutdown();
+				else if (isclose == 1)
+					System.exit(0);
 			}
 		});
 	}
 
 	// 线程完成计时器效果
-	@Override
-	public void run() {
-		while (!isStop) {
-			String time = calcLeftTime(totalTime);
-			String[] list = time.split(":");
-			textField.setText(list[0]);
-			textField_1.setText(list[1]);
-			textField_2.setText(list[2]);
-			try {
-				Thread.sleep(1000);
-				totalTime -= 1;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+	class timeThread extends Thread {
+		@Override
+		public void run() {
+			while (!isStop) {
+				String time = calcLeftTime(totalTime);
+				String[] list = time.split(":");
+				textField.setText(list[0]);
+				textField_1.setText(list[1]);
+				textField_2.setText(list[2]);
+				try {
+					Thread.sleep(1000);
+					totalTime -= 1;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -207,11 +212,12 @@ public class ShutDownDemo extends JFrame implements Runnable {
 			int value = process.waitFor(); // 执行返回值 0 表示成功 其他表示错误
 			// System.out.println(value); // 输出返回值
 			if (value == 0) {
-				ShutDownDemo helper = new ShutDownDemo();
-				new Thread(helper).start();
-				helper.setVisible(true);
+				new timeThread().start();
 				JOptionPane.showMessageDialog(null, "定时成功！");
-				dispose();
+				textField.setFocusable(false);
+				textField_1.setFocusable(false);
+				textField_2.setFocusable(false);
+				jbt1.setEnabled(false);
 			} else if (value != 0) {
 				printMessage(process.getInputStream());
 				printMessage(process.getErrorStream());
