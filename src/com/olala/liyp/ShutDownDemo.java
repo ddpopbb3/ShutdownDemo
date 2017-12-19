@@ -3,7 +3,7 @@
  *==============================================================================
  *
  *
- * Created on 2017��8��3�� ����4:14:57
+ * Created on 2017年8月3日 下午4:14:57
  *******************************************************************************/
 package com.olala.liyp;
 
@@ -51,7 +51,7 @@ public class ShutDownDemo extends JFrame {
 	private JTextField textField = new JTextField();
 	private JTextField textField_1 = new JTextField();
 	private JTextField textField_2 = new JTextField();
-	JButton jbt1 = new JButton("ȷ��");
+	JButton jbt1 = new JButton("确定");
 
 	// 构造函数
 	public ShutDownDemo() {
@@ -92,7 +92,7 @@ public class ShutDownDemo extends JFrame {
 		jbt1.setBounds(29, 0, 95, 59);
 		panel_1.add(jbt1);
 
-		JButton jbt2 = new JButton("ȡ��");
+		JButton jbt2 = new JButton("取消");
 		jbt2.setBounds(151, 0, 95, 59);
 		panel_1.add(jbt2);
 
@@ -197,10 +197,10 @@ public class ShutDownDemo extends JFrame {
 	public void cancelShutdown() {
 		String[] args = new String[] { "cmd.exe", "/c", "shutdown -a" };
 		try {
-			Runtime.getRuntime().exec(args); // ���Ĵ���
-			JOptionPane.showMessageDialog(null, "ȡ���ɹ�");
+			Runtime.getRuntime().exec(args); // 核心代码
+			JOptionPane.showMessageDialog(null, "取消成功");
 			isStop = true;
-			dispose(); // ���ٽ��棬�ͷ�һ������Դ
+			dispose(); // 销毁界面，释放一部分资源
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
