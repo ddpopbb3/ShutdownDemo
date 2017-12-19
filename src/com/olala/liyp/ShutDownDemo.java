@@ -3,7 +3,7 @@
  *==============================================================================
  *
  *
- * Created on 2017Äê8ÔÂ3ÈÕ ÏÂÎç4:14:57
+ * Created on 2017ï¿½ï¿½8ï¿½ï¿½3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½4:14:57
  *******************************************************************************/
 package com.olala.liyp;
 
@@ -26,10 +26,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
- * Ò»¸ö´øUIµÄÀ±¼¦¹Ø»úĞ¡³ÌĞò£¬×ÔÓÃ
+ * å¯ä»¥è®¾å®šå…³æœºæ—¶é—´ï¼Œå–æ¶ˆå…³æœº
  * 
  * @author liyp (mailto:liyp@primeton.com)
  */
@@ -37,20 +39,21 @@ public class ShutDownDemo extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public static void main(String[] args) {
 		new ShutDownDemo();
 	}
 
-	boolean isStop = false; // Ïß³Ì½áÊø±êÖ¾
-	static int totalTime = 0; // ×ÜÊ±¼ä
+	boolean isStop = false; // çº¿ç¨‹ç»“æŸæ ‡å¿—
+	static int totalTime = 0; // æ€»æ—¶é—´
 
-	// Ê±·ÖÃëÊäÈë¿ò
+	// æ—¶åˆ†ç§’è¾“å…¥æ¡†
 	private JTextField textField = new JTextField();
 	private JTextField textField_1 = new JTextField();
 	private JTextField textField_2 = new JTextField();
-	JButton jbt1 = new JButton("È·¶¨");
+	JButton jbt1 = new JButton("È·ï¿½ï¿½");
 
-	// ¹¹Ôìº¯Êı
+	// æ„é€ å‡½æ•°
 	public ShutDownDemo() {
 		setTitle("\u5173\u673A\u7A0B\u5E8F");
 		getContentPane().setLayout(null);
@@ -59,7 +62,7 @@ public class ShutDownDemo extends JFrame {
 		panel.setBounds(10, 26, 282, 31);
 		getContentPane().add(panel);
 
-		// Ê± ·Ö Ãë
+		// æ—¶åˆ†ç§’
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(textField);
 		textField.setColumns(2);
@@ -89,22 +92,22 @@ public class ShutDownDemo extends JFrame {
 		jbt1.setBounds(29, 0, 95, 59);
 		panel_1.add(jbt1);
 
-		JButton jbt2 = new JButton("È¡Ïû");
+		JButton jbt2 = new JButton("È¡ï¿½ï¿½");
 		jbt2.setBounds(151, 0, 95, 59);
 		panel_1.add(jbt2);
 
-		// ×¢²áÈ¡Ïû°´Å¥µÄ¼àÌıÊÂ¼ş
+		// æ³¨å†Œå–æ¶ˆæŒ‰é’®çš„ç›‘å¬äº‹ä»¶
 		jbt2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cancelShutdown();
 			}
 		});
-		// ×¢²áÈ·¶¨°´Å¥µÄ¼àÌıÊÂ¼ş
+		// æ³¨å†Œç¡®å®šæŒ‰é’®çš„ç›‘å¬äº‹ä»¶
 		jbt1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (calcTotalTime(textField.getText(), textField_1.getText(), textField_2.getText())) {
-					int isShutdown = JOptionPane.showConfirmDialog(null, "È·¶¨ÒªÔÚ" + calcLeftTime(totalTime) + "Ê±¼äºó¹Ø»úÂğ£¿",
-							"ÌáÊ¾", JOptionPane.YES_NO_OPTION);
+					int isShutdown = JOptionPane.showConfirmDialog(null, "ç¡®å®šè¦åœ¨" + calcLeftTime(totalTime) + "æ—¶é—´å…³æœºå—",
+						"æç¤º", JOptionPane.YES_NO_OPTION);
 					if (isShutdown == 0)
 						try {
 							executeShutdown();
@@ -112,22 +115,22 @@ public class ShutDownDemo extends JFrame {
 							e1.printStackTrace();
 						}
 				} else
-					JOptionPane.showMessageDialog(null, "ÇëÊäÈëÊı×Ö£¡");
+					JOptionPane.showMessageDialog(null, "è¯·è¾“å…¥æ•°å­—");
 			}
 		});
 
-		// Ö÷´°¿Ú²ÎÊıÉèÖÃ
+		// ä¸»çª—å£å‚æ•°è®¾ç½®
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setVisible(true);
 		this.setSize(308, 201);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 
-		// ×¢²á¹Ø±Õ´°¿ÚµÄ¼àÌıÊÂ¼ş
+		// æ³¨å†Œå…³é—­çª—å£çš„ç›‘å¬äº‹ä»¶
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				int isclose = JOptionPane.showConfirmDialog(null, "¹Ø±Õ´°¿ÚÇ°ÒªÈ¡Ïû¹Ø»ú¼Æ»®Âğ£¿", "ÎÂÜ°ÌáÊ¾",
-						JOptionPane.YES_NO_CANCEL_OPTION);
+				int isclose = JOptionPane.showConfirmDialog(null, "å…³é—­çª—å£å‰è¦å–æ¶ˆå…³æœºè®¡åˆ’å—ï¼Ÿ", "æ¸©é¦¨æç¤º",
+					JOptionPane.YES_NO_CANCEL_OPTION);
 				if (isclose == 0)
 					cancelShutdown();
 				else if (isclose == 1)
@@ -136,7 +139,7 @@ public class ShutDownDemo extends JFrame {
 		});
 	}
 
-	// Ïß³ÌÍê³É¼ÆÊ±Æ÷Ğ§¹û
+	// çº¿ç¨‹å®Œæˆè®¡æ—¶å™¨æ•ˆæœ
 	class timeThread extends Thread {
 		@Override
 		public void run() {
@@ -156,7 +159,7 @@ public class ShutDownDemo extends JFrame {
 		}
 	}
 
-	// ¼ÆËãÊ£ÓàÊ±¼ä£¬·µ»ØHH:mm:ss
+	// è®¡ç®—å‰©ä½™æ—¶é—´ï¼Œè¿”å›HH:mm:ss
 	public String calcLeftTime(int secondTime) {
 		String hour = null;
 		String minute = null;
@@ -171,7 +174,7 @@ public class ShutDownDemo extends JFrame {
 		return time;
 	}
 
-	// ²ÎÊı¼ì²éÒÔ¼°¼ÆËã×ÜÊ±¼ä
+	// å‚æ•°æ£€æŸ¥ä»¥åŠè®¡ç®—æ€»æ—¶é—´
 	public boolean calcTotalTime(String hour, String minute, String second) {
 		if (StringUtils.isBlank(second)) {
 			second = "0";
@@ -190,30 +193,30 @@ public class ShutDownDemo extends JFrame {
 
 	}
 
-	// È¡Ïû¹Ø»ú³ÌĞò
+	// å–æ¶ˆå…³æœºç¨‹åº
 	public void cancelShutdown() {
 		String[] args = new String[] { "cmd.exe", "/c", "shutdown -a" };
 		try {
-			Runtime.getRuntime().exec(args); // ºËĞÄ´úÂë
-			JOptionPane.showMessageDialog(null, "È¡Ïû³É¹¦");
+			Runtime.getRuntime().exec(args); // ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½
+			JOptionPane.showMessageDialog(null, "È¡ï¿½ï¿½ï¿½É¹ï¿½");
 			isStop = true;
-			dispose(); // Ïú»Ù½çÃæ£¬ÊÍ·ÅÒ»²¿·Ö×ÊÔ´
+			dispose(); // ï¿½ï¿½ï¿½Ù½ï¿½ï¿½æ£¬ï¿½Í·ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 	}
 
-	// Ö´ĞĞ¹Ø»ú³ÌĞò
+	// æ‰§è¡Œå…³æœºç¨‹åº
 	public void executeShutdown() throws InterruptedException {
 		calcTotalTime(textField.getText(), textField_1.getText(), textField_2.getText());
 		String[] args = new String[] { "cmd.exe", "/c", "shutdown -s -t " + totalTime };
 		try {
 			final Process process = Runtime.getRuntime().exec(args);
-			int value = process.waitFor(); // Ö´ĞĞ·µ»ØÖµ 0 ±íÊ¾³É¹¦ ÆäËû±íÊ¾´íÎó
-			// System.out.println(value); // Êä³ö·µ»ØÖµ
+			int value = process.waitFor(); // æ‰§è¡Œè¿”å›å€¼ 0 è¡¨ç¤ºæˆåŠŸ å…¶ä»–è¡¨ç¤ºé”™è¯¯
+			// System.out.println(value); // è¾“å‡ºè¿”å›å€¼Öµ
 			if (value == 0) {
 				new timeThread().start();
-				JOptionPane.showMessageDialog(null, "¶¨Ê±³É¹¦£¡");
+				JOptionPane.showMessageDialog(null, "å®šæ—¶æˆåŠŸ");
 				textField.setFocusable(false);
 				textField_1.setFocusable(false);
 				textField_2.setFocusable(false);
@@ -227,9 +230,9 @@ public class ShutDownDemo extends JFrame {
 		}
 	}
 
-	// ´òÓ¡Êä³öÁ÷»òÕß´íÎóÁ÷
+	// æ‰“å°è¾“å‡ºæµæˆ–è€…é”™è¯¯æµ
 	private static void printMessage(final InputStream input) {
-		// ÄäÃûº¯ÊıÆô¶¯Ïß³Ì
+		// åŒ¿åå‡½æ•°å¯åŠ¨çº¿ç¨‹
 		new Thread(new Runnable() {
 			public void run() {
 				Reader reader = new InputStreamReader(input);
@@ -237,8 +240,8 @@ public class ShutDownDemo extends JFrame {
 				String line = null;
 				try {
 					while ((line = bf.readLine()) != null) {
-						// System.out.println(line); //Êä³ö´íÎóĞÅÏ¢
-						JOptionPane.showMessageDialog(null, line); // µ¯³ö¿òÏÔÊ¾Êä³ö´íÎóĞÅÏ¢
+						// System.out.println(line); //è¾“å‡ºé”™è¯¯ä¿¡æ¯
+						JOptionPane.showMessageDialog(null, line); // å¼¹å‡ºæ¡†æ˜¾ç¤ºè¾“å‡ºé”™è¯¯ä¿¡æ¯
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -247,7 +250,7 @@ public class ShutDownDemo extends JFrame {
 		}).start();
 	}
 
-	// ¼ì²éÈë²ÎÖĞÊÇ·ñÓĞ·ÇÊı×Ö
+	// æ£€æŸ¥å…¥å‚ä¸­æ˜¯å¦æœ‰éæ•°å­—
 	public static boolean isNumeric(String str) {
 		for (int i = 0; i < str.length(); i++) {
 			if (!Character.isDigit(str.charAt(i))) {
