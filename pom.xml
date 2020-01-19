@@ -31,11 +31,5 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.6</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>4.3.3.RELEASE</version>
-		</dependency>
 	</dependencies>
 </project>
